@@ -32,7 +32,20 @@ const borshCampaignSchema = borsh.struct([
 
 const deserializeCampaignData = (buffer: Buffer) => {
   const bufferWithDiscriminator = buffer.subarray(8);
-  const data = borshCampaignSchema.decode(bufferWithDiscriminator);
+  const parser = borshCampaignSchema.decode(bufferWithDiscriminator);
+  console.log(">>>>>>>>>", parser.campaignData.startDate);
+  const data = {
+    campaign_id: parser.campaignId,
+    advertiser: parser.advertiser.toString(),
+    name: parser.campaignData.name,
+    cta_link: parser.campaignData.ctaLink,
+    logo: parser.campaignData.logo,
+    start_date: new Date(Number(parser.campaignData.startDate) * 1000),
+    end_date: new Date(Number(parser.campaignData.endDate) * 1000),
+    budget: parser.campaignData.budget,
+    rate_per_click: parser.campaignData.ratePerClick,
+    clicks: parser.campaignData.clicks,
+  };
   console.log("🚀 ~ deserializeCampaignData ~ data:", data);
 };
 
@@ -41,6 +54,7 @@ const getCampaignData = async (campaignId: number) => {
   campaignIdBuffer.writeBigUInt64LE(BigInt(campaignId));
   const seeds = [Buffer.from("campaign"), campaignIdBuffer];
   const campaignPDA = PublicKey.findProgramAddressSync(seeds, programId)[0];
+  console.log("🚀 ~ getCampaignData ~ campaignPDA:", campaignPDA.toBase58());
 
   const campaignDataRawBytes = (await connection.getAccountInfo(campaignPDA))
     .data;
