@@ -4,7 +4,7 @@ mod state;
 mod handlers;
 use handlers::*;
 
-declare_id!("7NafQywy9WpBDJRoXYrVtV7RfdudJ1jS66cagTDthezm");
+declare_id!("2GJKcE4b32duTLKW6YA1GsiwkEzmTNmSP2sk9nzSe47m");
 
 #[program]
 pub mod campaign {
